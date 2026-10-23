@@ -2,6 +2,25 @@
 
 一个 WorkBuddy Skill 包：输入一首古诗词的名字，让 AI **一次性直出完整海报**——插画、标题、诗句、作者署名、朱印全部在同一张图中生成，采用新中式细线设色装饰插画风格。
 
+## 生成效果预览
+
+<table>
+<tr>
+<td width="50%">
+  <img src="examples/浪淘沙/poster.png" alt="《浪淘沙·其一》刘禹锡" width="100%">
+  <p align="center"><b>《浪淘沙·其一》· 刘禹锡（唐）</b><br>
+  <sub>直上银河去，同到牵牛织女家</sub></p>
+</td>
+<td width="50%">
+  <img src="examples/如梦令/poster.png" alt="《如梦令·昨夜雨疏风骤》李清照" width="100%">
+  <p align="center"><b>《如梦令·昨夜雨疏风骤》· 李清照（宋）</b><br>
+  <sub>昨夜雨疏风骤，浓睡不消残酒</sub></p>
+</td>
+</tr>
+</table>
+
+完整示例见 [`examples/`](examples/README.md)。
+
 ## 灵感来源
 
 X 帖 [@leo_xiaolei](https://x.com/leo_xiaolei/status/2113471492831031698) 的"新中式细线设色装饰插画海报"完整提示词模板。
