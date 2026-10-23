@@ -1,17 +1,19 @@
 # 国风古诗词海报 Skill · guofeng-poem-poster
 
-一个 WorkBuddy Skill 包：输入一首古诗词的名字，输出「9:16 竖版国风海报生产包」——**背景图提示词 + 自包含 HTML 海报模板**。
+一个 WorkBuddy Skill 包：输入一首古诗词的名字，让 AI **一次性直出完整海报**——插画、标题、诗句、作者署名、朱印全部在同一张图中生成，采用新中式细线设色装饰插画风格。
 
 ## 灵感来源
 
-X 帖 [@leo_xiaolei](https://x.com/leo_xiaolei/status/2113471465429561416) 的"中式海报风格"提示词模板。
+X 帖 [@leo_xiaolei](https://x.com/leo_xiaolei/status/2113471492831031698) 的"新中式细线设色装饰插画海报"完整提示词模板。
 
 ## 设计思路
 
-传统 AI 生图无法稳定渲染汉字——所以这个 Skill **不硬让 AI 画字**，而是分两半：
+让 AI 当"画完整海报的画师"，而不是"画底图的画匠"。
 
-1. **背景图**：给一份精致的英文提示词（明确要求 `no text, no chinese characters`），留白给用户后期排版
-2. **文字层**：用 HTML + CSS 把诗句竖排排到背景上，字体走 Google Fonts 的开源书法体（Ma Shan Zheng / ZCOOL XiaoWei / Noto Serif SC）
+- **AI 直出文字**——不用后期叠字，模型直接生成标题、诗句、作者署名、朱印
+- **新中式细线设色**——工笔线描 + 传统色（石青/石绿/朱砂/赭红/胭脂/藤黄/花青）+ 暖米白留白
+- **东方散点透视**——高位俯瞰 + 现代平面构成，观看路径引导视线
+- **明确的文字版式**——标题/诗句/署名/朱印的位置、字号、纵排方向都在提示词中精确指定
 
 ## 使用方式
 
@@ -24,44 +26,70 @@ cp -r guofeng-poem-poster ~/.workbuddy/skills/
 
 然后跟 WorkBuddy 说：
 
-> 帮我做《静夜思》的国风海报
+> 帮我做《浪淘沙》唐·刘禹锡的国风海报
 
-Skill 会自动加载，走 5 步工作流（回忆原文 → 深度拆解 → 生成背景图提示词 → 生成 HTML 海报 → 交付），产出：
+Skill 会自动加载，走 4 步工作流（回忆原文 → 8 项深度拆解 → 生成完整海报提示词 → 交付），产出：
 
 ```
-./guofeng-posters/静夜思/
-├── prompt.md    # 背景图英文提示词 + 多后端参数
-└── poster.html  # 自包含 HTML 海报模板
+./guofeng-posters/浪淘沙/
+└── prompt.md    # 完整海报提示词 + 多后端参数（MJ / Flux / SDXL / Agnes）
 ```
 
 用户拿到后 3 步出成品：
 
-1. 把 `prompt.md` 里的英文提示词丢进 MJ / ComfyUI / ImageGen 生成背景图
-2. 把背景图放到 `poster.html` 同目录，改一下 `data-background-src`
-3. 浏览器打开 `poster.html`，点"打印 / 另存 PDF"按钮
+1. 打开 `prompt.md`，把"完整海报提示词"复制到 Midjourney（推荐 `--ar 9:16 --v 6.1 --style raw`）
+2. 生成图片，检查标题、诗句、作者署名、朱印是否准确
+3. 如果文字渲染失败，切换到 `assets/poster-template.html` 兜底方案
+
+## 8 项深度拆解
+
+Skill 让 AI 分析诗词并拆解出：
+
+1. **诗意关系**（远近/高低/动静/冷暖/聚散/时间变化/情感转折/虚实）
+2. **戏眼**（主角的一个具体动作）
+3. **核心意象**（2-4 个具体可拍的意象）
+4. **色彩层级**（主色 + 辅助色 + 点睛色，用传统色词）
+5. **情绪氛围**（一个词定性 + 画面化描述）
+6. **构图规划**（横向三分 / 纵向散点 / 对角线 / 圆形构图）
+7. **文字版式规划**（标题/诗句/署名/朱印的位置、字号、排布）
+8. **入画佳句**（1-2 句最有画面感的诗句）
+
+## 完整提示词的 8 个章节
+
+`references/poster-prompt-template.md` 提供了 8 章节的完整提示词模板：
+
+1. 诗意与场景
+2. 构图与空间组织
+3. 树木、花卉与自然景物
+4. 建筑、人物与地面水面
+5. 色彩与绘画方式
+6. 细节主次与稀碎感控制
+7. 文字版式与位置
+8. 整体限制与完成标准
 
 ## 文件结构
 
 ```
 guofeng-poem-poster/
-├── SKILL.md                             # Skill 主文件（触发条件 + 工作流 + anti-slop 规则）
+├── SKILL.md                             # Skill 主文件（v2.0.0，工作流 + anti-slop 规则）
 ├── references/
-│   ├── poem-analysis-guide.md           # 诗词分析框架（戏眼 / 意象 / 主色 / 情绪 / 佳句）
-│   └── background-prompt-template.md    # 背景图提示词模板（MJ / SDXL / Flux / Agnes 参数）
+│   ├── poem-analysis-guide.md           # 8 项深度拆解框架
+│   └── poster-prompt-template.md        # 完整海报提示词模板（8 章节 + 传统色词库 + 多后端参数）
 └── assets/
-    └── poster-template.html             # 自包含 HTML 海报模板（含书法字体、竖排、印章、导出按钮）
+    └── poster-template.html             # 兜底方案：AI 文字渲染差时用 HTML 后期叠字
 ```
 
 ## 与相关 Skill 的分工
 
 | Skill | 用途 |
 |---|---|
-| **本 Skill** | 一张 9:16 竖版**海报成品**，含诗句入画 |
-| `songci-guofeng-visualizer` | 只要**提示词**（MJ + Seedance 视频），不做海报 |
+| **本 Skill** | 一张 9:16 竖版**完整海报成品**（AI 一次性直出，含诗句入画） |
+| `songci-guofeng-visualizer` | 只要**分镜提示词**（MJ + Seedance 视频），不做海报 |
 | `poetry-comfyui-pipeline` | **完整视频流水线**（分镜 + 生图 + 生视频），走本地 ComfyUI |
 
 ## 版本
 
+- 2.0.0 — 核心思路反转：从"AI 生成无字底图 + HTML 叠字"改为"AI 一次性直出完整海报"
 - 1.0.0 — 初始版本
 
 ## 授权
