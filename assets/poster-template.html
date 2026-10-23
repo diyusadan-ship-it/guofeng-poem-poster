@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{POEM_TITLE}} · 国风诗词海报</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700;900&family=Liu+Jian+Mao+Cao&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f4ede0;
+    --paper-dark: #e8dfcc;
+    --ink: #1a1a1a;
+    --ink-light: #4a4a4a;
+    --seal-red: #b8312a;
+    --accent: #8b6f47;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #d8d0be;
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .poster {
+    position: relative;
+    width: 768px;
+    height: 1344px;
+    background-color: var(--paper);
+    background-image: url("{{BACKGROUND_PATH}}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 72px 60px;
+  }
+
+  /* 深色调主题（用于背景偏暗的诗） */
+  .poster.theme-dark {
+    color: #f4ede0;
+    --ink: #f4ede0;
+    --ink-light: #c9bfa8;
+  }
+
+  /* 文字底衬：半透明纸片，让诗句在背景上依然清晰 */
+  .verse-panel {
+    background: rgba(244, 237, 224, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 40px 32px;
+    border: 1px solid rgba(139, 111, 71, 0.18);
+    align-self: flex-start;
+    max-width: 560px;
+  }
+
+  .theme-dark .verse-panel {
+    background: rgba(20, 18, 14, 0.68);
+    border-color: rgba(244, 237, 224, 0.18);
+  }
+
+  /* 标题 */
+  .title-block {
+    text-align: center;
+    z-index: 3;
+  }
+  .title-block .title {
+    font-family: "Ma Shan Zheng", "ZCOOL XiaoWei", serif;
+    font-size: 72px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    line-height: 1.1;
+  }
+  .title-block .subtitle {
+    font-family: "Noto Serif SC", serif;
+    font-size: 20px;
+    color: var(--ink-light);
+    letter-spacing: 0.35em;
+    margin-top: 12px;
+    font-weight: 400;
+  }
+
+  /* 佳句：竖排、右侧起 */
+  .verses {
+    align-self: flex-end;
+    z-index: 3;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    padding: 8px;
+  }
+  .verse-line {
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    font-family: "Ma Shan Zheng", serif;
+    font-size: 56px;
+    letter-spacing: 0.28em;
+    line-height: 1.55;
+    color: var(--ink);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 20px 8px;
+    border-left: 2px solid rgba(139, 111, 71, 0.25);
+    border-right: 2px solid rgba(139, 111, 71, 0.25);
+    background: rgba(244, 237, 224, 0.72);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .theme-dark .verse-line {
+    background: rgba(20, 18, 14, 0.62);
+    border-color: rgba(244, 237, 224, 0.28);
+  }
+  .verse-line.small {
+    font-size: 40px;
+    letter-spacing: 0.22em;
+    line-height: 1.5;
+    opacity: 0.92;
+  }
+
+  /* 底部信息条 */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 3;
+    padding-top: 16px;
+    border-top: 1px solid rgba(139, 111, 71, 0.35);
+  }
+  .author-block {
+    font-family: "ZCOOL XiaoWei", serif;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: 0.15em;
+  }
+  .author-block .dynasty {
+    font-size: 16px;
+    color: var(--ink-light);
+    margin-left: 8px;
+    font-weight: 400;
+  }
+
+  /* 印章 */
+  .seal {
+    width: 72px;
+    height: 72px;
+    background-color: var(--seal-red);
+    color: #f4ede0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Ma Shan Zheng", serif;
+    font-size: 26px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25), inset 0 0 0 3px rgba(184, 49, 42, 1);
+    border: 2px solid var(--seal-red);
+    transform: rotate(-3deg);
+    position: relative;
+  }
+  .seal::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1.5px solid rgba(244, 237, 224, 0.9);
+  }
+  .seal-text {
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    padding: 4px 2px;
+    z-index: 1;
+    font-weight: 900;
+  }
+
+  /* 装饰：左侧竖条 + 小字 */
+  .side-decoration {
+    position: absolute;
+    left: 32px;
+    top: 72px;
+    bottom: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+  }
+  .side-decoration .vertical-text {
+    writing-mode: vertical-rl;
+    -webkit-writing-mode: vertical-rl;
+    font-family: "Noto Serif SC", serif;
+    font-size: 14px;
+    letter-spacing: 0.5em;
+    color: var(--ink-light);
+    opacity: 0.75;
+  }
+  .side-decoration .divider {
+    width: 1px;
+    height: 120px;
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      rgba(139, 111, 71, 0.4) 20%,
+      rgba(139, 111, 71, 0.4) 80%,
+      transparent 100%);
+  }
+
+  /* 打印/导出控制（不上画面） */
+  .toolbar {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .toolbar button {
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.95);
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: "Noto Serif SC", serif;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .toolbar button:hover { background: #fff; }
+
+  @media print {
+    .toolbar { display: none; }
+    html, body { background: transparent; padding: 0; }
+    .poster { box-shadow: none; }
+    @page { size: 768px 1344px; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="document.getElementById('bgInput').click()">更换背景图</button>
+  <button onclick="toggleTheme()">切换深/浅主题</button>
+  <button onclick="window.print()">打印/另存 PDF</button>
+</div>
+
+<input type="file" id="bgInput" accept="image/*" style="display:none" onchange="loadBg(this)">
+
+<div class="poster" id="poster">
+
+  <div class="side-decoration">
+    <div class="vertical-text">古風詩詞</div>
+    <div class="divider"></div>
+    <div class="vertical-text">東·方·美·學</div>
+  </div>
+
+  <div class="title-block">
+    <div class="title">{{POEM_TITLE}}</div>
+    <div class="subtitle">{{POEM_SUBTITLE}}</div>
+  </div>
+
+  <div class="verses">
+    <div class="verse-line">{{VERSE_1}}</div>
+    <div class="verse-line small">{{VERSE_2}}</div>
+  </div>
+
+  <div class="footer">
+    <div class="author-block">
+      {{POEM_AUTHOR}}<span class="dynasty">{{POEM_DYNASTY}}</span>
+    </div>
+    <div class="seal"><span class="seal-text">{{SEAL_TEXT}}</span></div>
+  </div>
+
+</div>
+
+<script>
+  function loadBg(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('poster').style.backgroundImage = 'url("' + e.target.result + '")';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function toggleTheme() {
+    document.getElementById('poster').classList.toggle('theme-dark');
+  }
+
+  // 若背景图尚未加载，给一段温和的提示（不遮挡诗句）
+  window.addEventListener('load', function() {
+    const poster = document.getElementById('poster');
+    if (poster.style.backgroundImage === '' || poster.style.backgroundImage === 'url("")') {
+      poster.style.background = 'linear-gradient(160deg, #f4ede0 0%, #d8c8a8 100%)';
+    }
+  });
+</script>
+
+</body>
+</html>
